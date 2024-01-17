@@ -18,11 +18,10 @@ from django.contrib import admin
 from django.urls import path
 
 #GJ
-from django.urls import include
+from . import views
 
 urlpatterns = [
     #GJ
-    path('python_socketio_server/', include('python_socketio_server.urls')),
+    path('', views.index),
 
-    path('admin/', admin.site.urls),
 ]

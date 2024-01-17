@@ -1,0 +1,78 @@
+<!-- GJ for socket_server5.py test
+ socket_client51_index_multiple_self_once_and_all_return_socketio.html -->
+
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Socket.io Client</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+    <style>
+    textarea {
+        margin-top: 10px;
+        padding: 10px;
+        line-height: 1.5;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        box-shadow: 1px 1px 1px #999;
+    }
+    </style>
+
+</head>
+<body>
+
+    <label for="user">1User Message : </label>
+    <input type="text" id="user" name="user_tx" placeholder="enter message">
+    <button onClick="UserMsg()">Client Message Send</button>
+    </br>
+    <label for="broadcast">To All Message : </label>
+    <input type="text" id="broadcast" name="all_tx" placeholder="enter message">
+    <button onClick="AllMsg()">Broadcast Message Send</button>
+
+
+    <!-- GJ display message contents -->
+    <div style="display: flex">
+            <!-- <input type="text" value="Hello world!" /> -->
+            <!-- <input type="text" name="name_messagebox" id="id_messagebox" style="vertical-align: middle"/> -->
+            <!-- <input type="text" height="100px" name="name_messagebox" id="id_messagebox" style="vertical-align: middle"/> -->
+        <!-- <textarea name="name_messagebox"></textarea> -->
+        <!-- <textarea style="width:100%"> -->
+        <textarea id="id_messagebox" style="flex: 1" rows="10" margin-top="10px"></textarea>
+    </div>
+
+    <script>
+        const socket = io("http://localhost:18000");
+
+        function AllMsg() {
+            socket.emit("all_msg", $('#broadcast').val());
+        }
+        function UserMsg() {
+            socket.emit("user_msg", $('#user').val());
+        }
+
+        socket.on("message", function(data) {
+            console.log(data);
+            //GJ
+            function setValue(id, data){
+                document.getElementById("id_messagebox").style.verticalAlign = "bottom";
+                var object = document.getElementById('id_messagebox');
+                var value = document.getElementById('id_messagebox').value;
+                if( value && data ){ object.value=value+"\n"+data; }
+                else if( !value && data ) { object.value=data; }
+
+                //GJ: goto focus at bottom when it scrolls down.
+                const top = $('#id_messagebox').prop('scrollHeight');
+                $('#id_messagebox').scrollTop(top);
+
+            }
+            data = data.trim();
+            setValue("id_messagebox", data);
+        });
+    </script>
+</body>
+</html>
